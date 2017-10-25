@@ -53,6 +53,9 @@ app.get('/predict', function(req, res) {
 
       var tempLink = {
         link: toPredict,
+        tag1: filtered[0].name,
+        tag2: filtered[1].name,
+        tag3: filtered[2].name,
       }
 
       //add the imgLink json to the links on db
