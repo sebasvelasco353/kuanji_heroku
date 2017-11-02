@@ -32,6 +32,9 @@ app.get('/predict', function(req, res) {
       // filtro por el threshold
       var filtered = tags.filter(function (tag) {
         if (tag.value > threshold && !tag.name.includes("Ninguna persona") && !tag.name.includes("pueblo")) {
+          if (tag.name.includes("canis lupus familiaris")) {
+            tag.name = "perro"
+          }
           return true;
         } else {
           return false;
