@@ -30,11 +30,18 @@ app.get('/predict', function(req, res) {
       // todos los tags
       var tags = response.rawData.outputs[0].data.concepts;
       // filtro por el threshold
-      var filtered = tags.filter(function (tag) {
-        if (tag.value > threshold && !tag.name.includes("Ninguna persona") && !tag.name.includes("pueblo")) {
+      var filtered = tags.filter(function(tag) {
+        if (tag.value > threshold && !tag.name.includes("Ninguna persona") && !tag.name.includes("pueblo") && !tag.name.includes("canidae") &&
+          !tag.name.includes("animal de compañia") && !tag.name.includes("negocio") && !tag.name.includes("canidae")   ) {
+
           if (tag.name.includes("canis lupus familiaris")) {
-            tag.name = "perro"
+            tag.name = "perro";
           }
+
+          if (tag.name.includes("mammalia")) {
+            tag.name = "mamifero";
+          }
+
           return true;
         } else {
           return false;
