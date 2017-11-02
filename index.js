@@ -31,7 +31,7 @@ app.get('/predict', function(req, res) {
       var tags = response.rawData.outputs[0].data.concepts;
       // filtro por el threshold
       var filtered = tags.filter(function (tag) {
-        if (tag.value > threshold && !tag.name.includes("Ninguna persona")) {
+        if (tag.value > threshold && !tag.name.includes("Ninguna persona") && !tag.name.includes("pueblo")) {
           return true;
         } else {
           return false;
