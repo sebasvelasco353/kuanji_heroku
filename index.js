@@ -23,10 +23,12 @@ app.set('port', (process.env.PORT || 5000));
 
 
 //Arrray of words im going to use to filter the tags given to me by the A.I
-const wordsToFilter_Array = ["delicioso", "almuerzo", "desayuno" ,  "cena" , "especialidad culinaria", "arte culinario", "fragaria", "nutrición", "salud",
-"bodegón", "productos", "insalubre", "solanum tuberosum", "tradicional", "cocción", "musa × paradisiaca", "contenedor de vidrio)", "expresión facial",
-"grupo (abstracción)", "pueblo", "sexy", "erótico", "uno", "tapa (recipiente)", "chica", "educación", "retrato", "gatito", "fondo de pantalla", "cricetinae",
-  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona"];
+
+const wordsToFilter_Array = ["delicioso", "almuerzo", "desayuno", "cena", "especialidad culinaria", "arte culinario", "fragaria", "nutrición", "salud",
+  "bodegón", "productos", "insalubre", "solanum tuberosum", "tradicional", "cocción", "musa × paradisiaca", "contenedor de vidrio)", "expresión facial",
+  "grupo (abstracción)", "pueblo", "sexy", "erótico", "uno", "tapa (recipiente)", "chica", "educación", "retrato", "gatito", "fondo de pantalla", "cricetinae",
+  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona"
+];
 
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
@@ -38,18 +40,55 @@ app.get('/predict', function(req, res) {
       var tags = response.rawData.outputs[0].data.concepts;
       // filtro por el threshold
       var filtered = tags.filter(function(tag) {
-        if (tag.value > threshold && !tag.name.includes("Ninguna persona") && !tag.name.includes("pueblo") && !tag.name.includes("canidae") &&
-          !tag.name.includes("animal de compañia") && !tag.name.includes("negocio")) {
+        if (tag.value > threshold) {
+          for (var i = 0; i < wordsToFilter_Array.length; i++) { //for to loop over the array
+            if (!tag.name.includes(wordsToFilter_Array[i])) { //i check if the tagname includes the
 
-          if ( (tag.name.includes("canis lupus familiaris") ) || (tag.name.includes("canidae") ) ) {
-            tag.name = "perro";
+              if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
+                tag.name = "perro";
+              }
+
+              if (tag.name.includes("masculina")) {
+                tag.name = "hombre";
+              }
+
+              if (tag.name.includes("Testudines")) {
+                tag.name = "tortuga";
+              }
+
+              if (tag.name.includes("masculina")) {
+                tag.name = "hombre";
+              }
+
+              if (tag.name.includes("reptilia")) {
+                tag.name = "reptil";
+              }
+
+              if (tag.name.includes("elephantidae")) {
+                tag.name = "elefante";
+              }
+
+              if (tag.name.includes("pyrus")) {
+                tag.name = "pera";
+              }
+
+              if (tag.name.includes("malus domestica")) {
+                tag.name = "manzana";
+              }
+
+              if (tag.name.includes("solanum tuberosum")) {
+                tag.name = "papa";
+              }
+
+              if (tag.name.includes("lactuca sativa")) {
+                tag.name = "lechuga";
+              }
+
+              return true;
+            } else {
+              return false;
+            }
           }
-          if (tag.name.includes("mammalia")) {
-            tag.name = "mamifero";
-          }
-          return true;
-        } else {
-          return false;
         }
       });
 
