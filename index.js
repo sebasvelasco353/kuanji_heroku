@@ -46,41 +46,23 @@ app.get('/predict', function(req, res) {
 
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
                 tag.name = "perro";
-              }
-
-              if (tag.name.includes("masculina")) {
+              } else if (tag.name.includes("masculina")) {
                 tag.name = "hombre";
-              }
-
-              if (tag.name.includes("Testudines")) {
+              } else if (tag.name.includes("Testudines")) {
                 tag.name = "tortuga";
-              }
-
-              if (tag.name.includes("masculina")) {
+              } else if (tag.name.includes("masculina")) {
                 tag.name = "hombre";
-              }
-
-              if (tag.name.includes("reptilia")) {
+              } else if (tag.name.includes("reptilia")) {
                 tag.name = "reptil";
-              }
-
-              if (tag.name.includes("elephantidae")) {
+              } else if (tag.name.includes("elephantidae")) {
                 tag.name = "elefante";
-              }
-
-              if (tag.name.includes("pyrus")) {
+              } else if (tag.name.includes("pyrus")) {
                 tag.name = "pera";
-              }
-
-              if (tag.name.includes("malus domestica")) {
+              } else if (tag.name.includes("malus domestica")) {
                 tag.name = "manzana";
-              }
-
-              if (tag.name.includes("solanum tuberosum")) {
+              } else if (tag.name.includes("solanum tuberosum")) {
                 tag.name = "papa";
-              }
-
-              if (tag.name.includes("lactuca sativa")) {
+              } else if (tag.name.includes("lactuca sativa")) {
                 tag.name = "lechuga";
               }
 
