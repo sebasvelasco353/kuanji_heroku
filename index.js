@@ -21,6 +21,13 @@ const MAXPREDICTION = 3;
 
 app.set('port', (process.env.PORT || 5000));
 
+
+//Arrray of words im going to use to filter the tags given to me by the A.I
+const wordsToFilter_Array = ["delicioso", "almuerzo", "desayuno" ,  "cena" , "especialidad culinaria", "arte culinario", "fragaria", "nutrición", "salud",
+"bodegón", "productos", "insalubre", "solanum tuberosum", "tradicional", "cocción", "musa × paradisiaca", "contenedor de vidrio)", "expresión facial",
+"grupo (abstracción)", "pueblo", "sexy", "erótico", "uno", "tapa (recipiente)", "chica", "educación", "retrato", "gatito", "fondo de pantalla", "cricetinae",
+  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona"];
+
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
 app.get('/predict', function(req, res) {
@@ -32,16 +39,14 @@ app.get('/predict', function(req, res) {
       // filtro por el threshold
       var filtered = tags.filter(function(tag) {
         if (tag.value > threshold && !tag.name.includes("Ninguna persona") && !tag.name.includes("pueblo") && !tag.name.includes("canidae") &&
-          !tag.name.includes("animal de compañia") && !tag.name.includes("negocio") && !tag.name.includes("canidae")   ) {
+          !tag.name.includes("animal de compañia") && !tag.name.includes("negocio")) {
 
-          if (tag.name.includes("canis lupus familiaris")) {
+          if ( (tag.name.includes("canis lupus familiaris") ) || (tag.name.includes("canidae") ) ) {
             tag.name = "perro";
           }
-
           if (tag.name.includes("mammalia")) {
             tag.name = "mamifero";
           }
-
           return true;
         } else {
           return false;
