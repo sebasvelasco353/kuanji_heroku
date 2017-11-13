@@ -18,17 +18,38 @@ const clarifaiApp = new Clarifai.App({
 });
 var threshold = 0.90;
 const MAXPREDICTION = 3;
+// Array for me to store all the links that are in a category
+var categoryArray= [];
 
 app.set('port', (process.env.PORT || 5000));
 
 
 //Arrray of words im going to use to filter the tags given to me by the A.I
-
-const wordsToFilter_Array = ["delicioso", "almuerzo", "desayuno", "cena", "especialidad culinaria", "arte culinario", "fragaria", "nutrición", "salud",
+const wordsToFilter_Array = [
+  "delicioso", "almuerzo", "desayuno", "cena", "especialidad culinaria", "arte culinario", "fragaria", "nutrición", "salud",
   "bodegón", "productos", "insalubre", "solanum tuberosum", "tradicional", "cocción", "musa × paradisiaca", "contenedor de vidrio)", "expresión facial",
   "grupo (abstracción)", "pueblo", "sexy", "erótico", "uno", "tapa (recipiente)", "chica", "educación", "retrato", "gatito", "fondo de pantalla", "cricetinae",
-  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona"
+  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona", "linda"
 ];
+
+
+//------------ Function used for retreiving all image links from one specific tag in the format tag -> link 1, 2 ... n
+
+// TODO: finish the get tag for the categorias: animales, personas, comida
+
+function getTag ( private tagToSearch: String){
+  //get the tag needed
+  // query for calling all images onspecific tag
+  const query = refTags.ref.child(tagToSearch);
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      categoryArray.push(snapTemp);
+    });
+  }).then(function(data) {
+    res.json(categoryArray);
+  });
+}
 
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
@@ -46,8 +67,8 @@ app.get('/predict', function(req, res) {
 
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
                 tag.name = "perro";
-              } else if (tag.name.includes("masculina")) {
-                tag.name = "hombre";
+              } else if (tag.name.includes("animalia")) {
+                tag.name = "animal";
               } else if (tag.name.includes("Testudines")) {
                 tag.name = "tortuga";
               } else if (tag.name.includes("masculina")) {
@@ -144,22 +165,13 @@ app.get('/getAllTags', function(req, res) {
   });
 });
 
-//------------ Function used for retreiving all image links from one specific tag in the format tag -> link 1, 2 ... n
-app.get('/getSpecificTag', function(req, res) {
+
+//------------ Function used for retreiving all image links where the tags are animals -> link 1, 2 ... n
+app.get('/getAnimals', function(req, res) {
   // arreglo donde guardo los links temporalmente para enviarlos
-  var arreglo_imagenesPorTag = [];
-  //get the tag needed
-  var tagSearch = req.query.tagSearch;
-  // query for calling all images onspecific tag
-  const query = refTags.ref.child(tagSearch);
-  query.once("value", function(data) {
-    data.forEach(function(cadaImgSnapshot) {
-      var snapTemp = cadaImgSnapshot.val();
-      arreglo_imagenesPorTag.push(snapTemp);
-    });
-  }).then(function(data) {
-    res.json(arreglo_imagenesPorTag);
-  });
+  var arreglo_Animales = [];
+
+
 });
 
 app.listen(app.get('port'), function() {
