@@ -25,31 +25,12 @@ app.set('port', (process.env.PORT || 5000));
 
 
 //Arrray of words im going to use to filter the tags given to me by the A.I
-const wordsToFilter_Array = [
+var wordsToFilter_Array = [
   "delicioso", "almuerzo", "desayuno", "cena", "especialidad culinaria", "arte culinario", "fragaria", "nutrición", "salud",
   "bodegón", "productos", "insalubre", "solanum tuberosum", "tradicional", "cocción", "musa × paradisiaca", "contenedor de vidrio)", "expresión facial",
   "grupo (abstracción)", "pueblo", "sexy", "erótico", "uno", "tapa (recipiente)", "chica", "educación", "retrato", "gatito", "fondo de pantalla", "cricetinae",
-  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona", "linda"
+  "psittaciformes", "exoesqueleto", "linda", "conejito", "adentro", "habitación", "ninguna persona", "linda", "theraphosidae", "arácnido"
 ];
-
-
-//------------ Function used for retreiving all image links from one specific tag in the format tag -> link 1, 2 ... n
-
-// TODO: finish the get tag for the categorias: animales, personas, comida
-
-function getTag ( private tagToSearch: String){
-  //get the tag needed
-  // query for calling all images onspecific tag
-  const query = refTags.ref.child(tagToSearch);
-  query.once("value", function(data) {
-    data.forEach(function(cadaImgSnapshot) {
-      var snapTemp = cadaImgSnapshot.val();
-      categoryArray.push(snapTemp);
-    });
-  }).then(function(data) {
-    res.json(categoryArray);
-  });
-}
 
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
@@ -62,7 +43,10 @@ app.get('/predict', function(req, res) {
       // filtro por el threshold
       var filtered = tags.filter(function(tag) {
         if (tag.value > threshold) {
+          // TODO: I think the problem its basically the fact that im returning true in the first iteration of the for loop
+
           for (var i = 0; i < wordsToFilter_Array.length; i++) { //for to loop over the array
+            console.log(wordsToFilter_Array[i] + " es en la pos numero " + i);
             if (!tag.name.includes(wordsToFilter_Array[i])) { //i check if the tagname includes the
 
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
@@ -164,6 +148,22 @@ app.get('/getAllTags', function(req, res) {
     res.json(arreglo_tags);
   });
 });
+
+//------------ This part is in charge of selecting the photos according to the categories
+// TODO: finish the get tag for the categories: animales, personas, comida
+function getTag ( tagToSearch ){
+  // query for calling all images onspecific tag
+  const query = refTags.ref.child(tagToSearch);
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      categoryArray.push(snapTemp);
+    });
+  }).then(function(data) {
+    return categoryArray;
+  });
+}
+
 
 
 //------------ Function used for retreiving all image links where the tags are animals -> link 1, 2 ... n
