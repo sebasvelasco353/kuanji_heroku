@@ -130,6 +130,8 @@ const COMIDA_KNOWN = [
   "verdura",
   "asado",
   "carne",
+  "fruto",
+  "mariscos",
   "sopa",
   "ensalada",
   "bebida",
