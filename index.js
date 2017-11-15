@@ -259,6 +259,36 @@ app.get('/getAnimals', function(req, res) {
   }//cierro for
 });
 
+app.get('/getPersonas', function(req, res) {
+  var counter = 0;
+  var numTipoAnimal = ANIMALS_KNOWN.length;
+  var animalsArray = [];
+  //TODO: Llenar animalsArray con los datos que retorna getTag con cada animal de un array, y despues enviarlo como respuesta
+  for (var i = 0; i < numTipoAnimal; i++) {
+    // console.log(ANIMALS_KNOWN[i]);
+    var query = refTags.ref.child(ANIMALS_KNOWN[i]);
+    query.once("value", function(data) {
+      data.forEach(function(cadaImgSnapshot) {
+        var snapTemp = cadaImgSnapshot.val();
+        if (snapTemp != undefined) {
+        animalsArray.push(snapTemp);
+        }
+      });
+      // console.log("current animal " + ANIMALS_KNOWN[i] + " numero " + i + " of ANIMALS_KNOWN: " + numTipoAnimal);
+      console.log(animalsArray);
+      console.log( " iteration number " + counter);
+      counter++;
+
+      //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
+      if (counter == numTipoAnimal-1) {
+        res.json(animalsArray)
+      }
+    }).then(function(data) {
+      // DO NOTHING
+    });
+  }//cierro for
+});
+
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
