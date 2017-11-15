@@ -59,6 +59,7 @@ const WORDSTOFILTER_ARRAY = [
 
 //Tags that tell it is an animal
 const ANIMALS_KNOWN = [
+  "animal",
   "abeja",
   "aguila",
   "araña",
@@ -120,6 +121,26 @@ const PERSONAS_KNOWN = [
   "masculino",
   "femenino",
   "adulto"
+];
+
+//Tags that tell it is food
+const COMIDA_KNOWN = [
+  "comida",
+  "pasta",
+  "verdura",
+  "asado",
+  "carne",
+  "sopa",
+  "ensalada",
+  "bebida",
+  "gaseosa",
+  "sopa",
+  "delicioso",
+  "almuerzo",
+  "desayuno",
+  "cena",
+  "especialidad culinaria",
+  "arte culinario"
 ];
 
 //Gets
@@ -278,6 +299,33 @@ app.get('/getPersonas', function(req, res) {
       //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
       if (counter == numPersonas - 1) {
         res.json(personasArray)
+      }
+    }).then(function(data) {
+      // DO NOTHING
+    });
+  } //cierro for
+});
+
+app.get('/getComida', function(req, res) {
+  var counter = 0;
+  var numComidas = COMIDA_KNOWN.length;
+  var comidasArray = [];
+  for (var i = 0; i < numComidas; i++) {
+    var query = refTags.ref.child(COMIDA_KNOWN[i]);
+    query.once("value", function(data) {
+      data.forEach(function(cadaImgSnapshot) {
+        var snapTemp = cadaImgSnapshot.val();
+        if (snapTemp != undefined) {
+          comidasArray.push(snapTemp);
+        }
+      });
+      console.log(comidasArray);
+      console.log(" iteration number " + counter);
+      counter++;
+
+      //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
+      if (counter == numComidas - 1) {
+        res.json(comidasArray)
       }
     }).then(function(data) {
       // DO NOTHING
