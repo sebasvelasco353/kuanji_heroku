@@ -12,12 +12,11 @@ const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'
 var threshold = 0.90;
 const MAXPREDICTION = 3;
 // Array for me to store all the links that are in a category
-var categoryArray = [];
-
+// var categoryArray = [];
 app.set('port', (process.env.PORT || 5000));
 
 //Arrray of words im going to use to filter the tags given to me by the A.I
-var wordsToFilter_Array = [
+const WORDSTOFILTER_ARRAY = [
   "delicioso",
   "almuerzo",
   "desayuno",
@@ -60,6 +59,8 @@ var wordsToFilter_Array = [
   "arácnido"
 ];
 
+const ANIMALS_KNOWN = [];
+
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
 app.get('/predict', function(req, res) {
@@ -70,9 +71,9 @@ app.get('/predict', function(req, res) {
     // filtro por el threshold
     var filtered = tags.filter(function(tag) {
       if (tag.value > threshold) {
-        if (!tag.name.includes(wordsToFilter_Array[i])) { //i check if the tagname includes the
-          for (var i = 0; i < wordsToFilter_Array.length; i++) { //for to loop over the array
-            console.log(wordsToFilter_Array[i] + " es en la pos numero " + i);
+        if (!tag.name.includes("ninguna persona")) { //i check if the tagname includes the
+          for (var i = 0; i < WORDSTOFILTER_ARRAY.length; i++) { //for to loop over the array
+            console.log(WORDSTOFILTER_ARRAY[i] + " es en la pos numero " + i);
             if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
               tag.name = "perro";
             } else if (tag.name.includes("animalia")) {
@@ -171,25 +172,54 @@ app.get('/getAllTags', function(req, res) {
 
 //------------ This part is in charge of selecting the photos according to the categories
 // TODO: finish the get tag for the categories: animales, personas, comida
-function getTag(tagToSearch) {
-  // query for calling all images onspecific tag
-  const query = refTags.ref.child(tagToSearch);
-  query.once("value", function(data) {
-    data.forEach(function(cadaImgSnapshot) {
-      var snapTemp = cadaImgSnapshot.val();
-      categoryArray.push(snapTemp);
-    });
-  }).then(function(data) {
-    return categoryArray;
-  });
-}
+// function getTag(tagToSearch) {
+//   console.log("holi desde getTag con tag = " + tagToSearch);
+//   // categoryArray = [];
+//   // query for calling all images onspecific tag
+//   const query = refTags.ref.child(tagToSearch);
+//   query.once("value", function(data) {
+//     data.forEach(function(cadaImgSnapshot) {
+//       var snapTemp = cadaImgSnapshot.val();
+//       categoryArray.push(snapTemp);
+//     });
+//   }).then(function(data) {
+//     // console.log(categoryArray);
+//     return categoryArray;
+//   });
+//   // return categoryArray;
+// }
 
 //------------ Function used for retreiving all image links where the tags are animals -> link 1, 2 ... n
 app.get('/getAnimals', function(req, res) {
   // arreglo donde guardo los links temporalmente para enviarlos
-  var arreglo_Animales = [];
+  var animalsArray = [];
+  // var categoryArray = [];
+  //TODO: Llenar animalsArray con los datos que retorna getTag con cada animal de un array, y despues enviarlo como respuesta
+  // getTag("animal de compañía");
+  var query = refTags.ref.child("animal de compañía");
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      console.log(snapTemp);
+      animalsArray.push(snapTemp);
+    });
+  }).then(function(data) {
+    // for (var i = 0; i < categoryArray.length; i++) {
+    //   animalsArray.push(categoryArray[i]);
+    // }
+    // return animalsArray;
+    res.json(animalsArray);
+  });
 
+  //
+  //   console.log(categoryArray);
+  //   for (var i = 0; i < categoryArray.length; i++) {
+  //   console.log("categoryArray en la posicion #" + i + "tiene a " + categoryArray[i]);
+  //   animalsArray.push(categoryArray[i]);
+  //   }
+  //   res.json(animalsArray);
 });
+
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
