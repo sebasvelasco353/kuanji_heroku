@@ -11,6 +11,7 @@ var refTags = db.ref('/tags');
 const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'});
 var threshold = 0.90;
 const MAXPREDICTION = 3;
+var animalsArray = [];
 // Array for me to store all the links that are in a category
 // var categoryArray = [];
 app.set('port', (process.env.PORT || 5000));
@@ -62,90 +63,44 @@ const WORDSTOFILTER_ARRAY = [
 const ANIMALS_KNOWN = [
   "abeja",
   "aguila",
-  "alce",
-  "almejas",
-  "alondra",
-  "anguila",
-  "antílope",
   "araña",
   "ardilla",
-  "atún",
-  "avestruz",
   "avispa",
   "babosa",
-  "bacalao",
   "ballena",
-  "buey",
-  "búfalo",
   "búho",
   "buitre",
   "burro",
   "caballo",
-  "caballito de Mar",
   "cabra",
-  "cacatúa",
-  "caimán",
-  "calamar",
-  "camaleón",
-  "camarón",
-  "camello",
   "canario",
   "cangrejo",
   "crustáceo",
-  "canguro",
   "caracol",
-  "castor",
-  "cebra",
   "cerdo",
-  "chacal",
   "chimpancé",
   "chinche",
   "ciempiés",
-  "ciervo",
-  "cigarra",
-  "cigüeña",
-  "cisne",
-  "cobaya",
   "cocodrilo",
   "codorniz",
   "colibrí",
-  "comadreja",
-  "cóndor",
   "conejo",
-  "correcaminos",
-  "corzo",
-  "cotorra",
-  "ducaracha",
-  "duervo",
-  "delfín",
-  "dromedario",
-  "elefante",
+  "cucaracha",
   "erizo",
   "escarabajo",
   "escorpión",
-  "estrella de Mar",
-  "faisán",
-  "flamenco",
-  "foca",
-  "gacela",
   "gallina",
   "gallo",
   "ganso",
   "gato",
   "garrapata",
-  "gorila",
-  "jirafa",
   "lagartija",
   "libélula",
   "loro",
-  "lobo",
   "lombriz",
-  "mandril",
   "mosca",
   "mono",
   "murcielago",
-  "oso",
-  "oveja",
   "pájaro",
   "paloma",
   "pez",
@@ -197,10 +152,10 @@ app.get('/predict', function(req, res) {
               return false;
             }
           }
-        return true;
-      } else { //cierro if de !tg.name array
-        return false;
-      }
+          return true;
+        } else { //cierro if de !tg.name array
+          return false;
+        }
       }
     });
 
@@ -274,19 +229,22 @@ app.get('/getAllTags', function(req, res) {
 //------------ This part is in charge of selecting the photos according to the categories
 // TODO: finish the get tag for the categories: animales, personas, comida
 app.get('/getAnimals', function(req, res) {
-  // arreglo donde guardo los links temporalmente para enviarlos
-  var animalsArray = [];
   //TODO: Llenar animalsArray con los datos que retorna getTag con cada animal de un array, y despues enviarlo como respuesta
-  var query = refTags.ref.child("animal de compañía");
-  query.once("value", function(data) {
-    data.forEach(function(cadaImgSnapshot) {
-      var snapTemp = cadaImgSnapshot.val();
-      console.log(snapTemp);
-      animalsArray.push(snapTemp);
+  for (var i = 0; i < ANIMALS_KNOWN.length; i++) {
+    var query = refTags.ref.child(ANIMALS_KNOWN[i]);
+    query.once("value", function(data) {
+      data.forEach(function(cadaImgSnapshot) {
+        var snapTemp = cadaImgSnapshot.val();
+        if (snapTemp != undefined) {
+        console.log(snapTemp);
+        animalsArray.push(snapTemp);
+        }
+      });
+    }).then(function(data) {
+      // res.json(animalsArray);
     });
-  }).then(function(data) {
-    res.json(animalsArray);
-  });
+  } //cierro for
+  res.json(animalsArray);
 });
 
 app.listen(app.get('port'), function() {
