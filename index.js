@@ -271,12 +271,16 @@ app.get('/getAnimals', function(req, res) {
           animalsArray.push(snapTemp);
         }
       });
+      // counter++;
+      // if (counter == numTipoAnimal - 1) {
+      //   res.json(animalsArray)
+      // }
+    }).then(function(data) {
+      // DO NOTHING
       counter++;
       if (counter == numTipoAnimal - 1) {
         res.json(animalsArray)
       }
-    }).then(function(data) {
-      // DO NOTHING
     });
   } //cierro for
 });
@@ -296,14 +300,16 @@ app.get('/getPersonas', function(req, res) {
       });
       console.log(personasArray);
       console.log(" iteration number " + counter);
+      // counter++;
+      // if (counter == numPersonas - 1) {
+      //   res.json(personasArray)
+      // }
+    }).then(function(data) {
+      // DO NOTHING
       counter++;
-
-      //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
       if (counter == numPersonas - 1) {
         res.json(personasArray)
       }
-    }).then(function(data) {
-      // DO NOTHING
     });
   } //cierro for
 });
@@ -323,14 +329,16 @@ app.get('/getComida', function(req, res) {
       });
       console.log(comidasArray);
       console.log(" iteration number " + counter);
+      // counter++;
+      // if (counter == numComidas - 1) {
+      //   res.json(comidasArray)
+      // }
+    }).then(function(data) {
+      // DO NOTHING
       counter++;
-
-      //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
       if (counter == numComidas - 1) {
         res.json(comidasArray)
       }
-    }).then(function(data) {
-      // DO NOTHING
     });
   } //cierro for
 });
