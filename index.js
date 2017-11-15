@@ -11,11 +11,6 @@ var refTags = db.ref('/tags');
 const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'});
 var threshold = 0.90;
 const MAXPREDICTION = 3;
-
-var testeando = [];
-// var animalsArray = [];
-// Array for me to store all the links that are in a category
-// var categoryArray = [];
 app.set('port', (process.env.PORT || 5000));
 
 //Arrray of words im going to use to filter the tags given to me by the A.I
@@ -62,6 +57,7 @@ const WORDSTOFILTER_ARRAY = [
   "arácnido"
 ];
 
+//Tags that tell it is an animal
 const ANIMALS_KNOWN = [
   "abeja",
   "aguila",
@@ -114,6 +110,16 @@ const ANIMALS_KNOWN = [
   "perro",
   "hamster",
   "reptil"
+];
+
+//Tags that tell it is a person
+const PERSONAS_KNOWN = [
+  "hombre",
+  "mujer",
+  "persona",
+  "masculino",
+  "femenino",
+  "adulto"
 ];
 
 //Gets
@@ -233,60 +239,50 @@ app.get('/getAnimals', function(req, res) {
   var counter = 0;
   var numTipoAnimal = ANIMALS_KNOWN.length;
   var animalsArray = [];
-  //TODO: Llenar animalsArray con los datos que retorna getTag con cada animal de un array, y despues enviarlo como respuesta
   for (var i = 0; i < numTipoAnimal; i++) {
-    // console.log(ANIMALS_KNOWN[i]);
     var query = refTags.ref.child(ANIMALS_KNOWN[i]);
     query.once("value", function(data) {
       data.forEach(function(cadaImgSnapshot) {
         var snapTemp = cadaImgSnapshot.val();
         if (snapTemp != undefined) {
-        animalsArray.push(snapTemp);
+          animalsArray.push(snapTemp);
         }
       });
-      // console.log("current animal " + ANIMALS_KNOWN[i] + " numero " + i + " of ANIMALS_KNOWN: " + numTipoAnimal);
-      console.log(animalsArray);
-      console.log( " iteration number " + counter);
       counter++;
-
-      //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
-      if (counter == numTipoAnimal-1) {
+      if (counter == numTipoAnimal - 1) {
         res.json(animalsArray)
       }
     }).then(function(data) {
       // DO NOTHING
     });
-  }//cierro for
+  } //cierro for
 });
 
 app.get('/getPersonas', function(req, res) {
   var counter = 0;
-  var numTipoAnimal = ANIMALS_KNOWN.length;
-  var animalsArray = [];
-  //TODO: Llenar animalsArray con los datos que retorna getTag con cada animal de un array, y despues enviarlo como respuesta
-  for (var i = 0; i < numTipoAnimal; i++) {
-    // console.log(ANIMALS_KNOWN[i]);
-    var query = refTags.ref.child(ANIMALS_KNOWN[i]);
+  var numPersonas = PERSONAS_KNOWN.length;
+  var personasArray = [];
+  for (var i = 0; i < numPersonas; i++) {
+    var query = refTags.ref.child(PERSONAS_KNOWN[i]);
     query.once("value", function(data) {
       data.forEach(function(cadaImgSnapshot) {
         var snapTemp = cadaImgSnapshot.val();
         if (snapTemp != undefined) {
-        animalsArray.push(snapTemp);
+          personasArray.push(snapTemp);
         }
       });
-      // console.log("current animal " + ANIMALS_KNOWN[i] + " numero " + i + " of ANIMALS_KNOWN: " + numTipoAnimal);
-      console.log(animalsArray);
-      console.log( " iteration number " + counter);
+      console.log(personasArray);
+      console.log(" iteration number " + counter);
       counter++;
 
       //When the counter of iterations throught the animals known gets to the number of animals minus one (because counter starts at 0) it will send the answer
-      if (counter == numTipoAnimal-1) {
-        res.json(animalsArray)
+      if (counter == numPersonas - 1) {
+        res.json(personasArray)
       }
     }).then(function(data) {
       // DO NOTHING
     });
-  }//cierro for
+  } //cierro for
 });
 
 app.listen(app.get('port'), function() {
