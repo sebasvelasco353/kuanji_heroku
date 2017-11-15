@@ -59,7 +59,105 @@ const WORDSTOFILTER_ARRAY = [
   "arácnido"
 ];
 
-const ANIMALS_KNOWN = [];
+const ANIMALS_KNOWN = [
+  "abeja",
+  "aguila",
+  "alce",
+  "almejas",
+  "alondra",
+  "anguila",
+  "antílope",
+  "araña",
+  "ardilla",
+  "atún",
+  "avestruz",
+  "avispa",
+  "babosa",
+  "bacalao",
+  "ballena",
+  "buey",
+  "búfalo",
+  "búho",
+  "buitre",
+  "burro",
+  "caballo",
+  "caballito de Mar",
+  "cabra",
+  "cacatúa",
+  "caimán",
+  "calamar",
+  "camaleón",
+  "camarón",
+  "camello",
+  "canario",
+  "cangrejo",
+  "crustáceo",
+  "canguro",
+  "caracol",
+  "castor",
+  "cebra",
+  "cerdo",
+  "chacal",
+  "chimpancé",
+  "chinche",
+  "ciempiés",
+  "ciervo",
+  "cigarra",
+  "cigüeña",
+  "cisne",
+  "cobaya",
+  "cocodrilo",
+  "codorniz",
+  "colibrí",
+  "comadreja",
+  "cóndor",
+  "conejo",
+  "correcaminos",
+  "corzo",
+  "cotorra",
+  "ducaracha",
+  "duervo",
+  "delfín",
+  "dromedario",
+  "elefante",
+  "erizo",
+  "escarabajo",
+  "escorpión",
+  "estrella de Mar",
+  "faisán",
+  "flamenco",
+  "foca",
+  "gacela",
+  "gallina",
+  "gallo",
+  "ganso",
+  "gato",
+  "garrapata",
+  "gorila",
+  "jirafa",
+  "lagartija",
+  "libélula",
+  "loro",
+  "lobo",
+  "lombriz",
+  "mandril",
+  "mosca",
+  "mono",
+  "murcielago",
+  "oso",
+  "oveja",
+  "pájaro",
+  "paloma",
+  "pez",
+  "pescado",
+  "rana",
+  "rata",
+  "sapo",
+  "tortuga",
+  "perro",
+  "hamster",
+  "reptil"
+];
 
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
@@ -71,35 +169,38 @@ app.get('/predict', function(req, res) {
     // filtro por el threshold
     var filtered = tags.filter(function(tag) {
       if (tag.value > threshold) {
-        if (!tag.name.includes("ninguna persona")) { //i check if the tagname includes the
+        if ((tag.name != null) || (tag.name != undefined)) {
           for (var i = 0; i < WORDSTOFILTER_ARRAY.length; i++) { //for to loop over the array
-            console.log(WORDSTOFILTER_ARRAY[i] + " es en la pos numero " + i);
-            if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
-              tag.name = "perro";
-            } else if (tag.name.includes("animalia")) {
-              tag.name = "animal";
-            } else if (tag.name.includes("Testudines")) {
-              tag.name = "tortuga";
-            } else if (tag.name.includes("masculina")) {
-              tag.name = "hombre";
-            } else if (tag.name.includes("reptilia")) {
-              tag.name = "reptil";
-            } else if (tag.name.includes("elephantidae")) {
-              tag.name = "elefante";
-            } else if (tag.name.includes("pyrus")) {
-              tag.name = "pera";
-            } else if (tag.name.includes("malus domestica")) {
-              tag.name = "manzana";
-            } else if (tag.name.includes("solanum tuberosum")) {
-              tag.name = "papa";
-            } else if (tag.name.includes("lactuca sativa")) {
-              tag.name = "lechuga";
+            if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes the
+              if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
+                tag.name = "perro";
+              } else if (tag.name.includes("animalia")) {
+                tag.name = "animal";
+              } else if (tag.name.includes("Testudines")) {
+                tag.name = "tortuga";
+              } else if (tag.name.includes("masculina")) {
+                tag.name = "hombre";
+              } else if (tag.name.includes("reptilia")) {
+                tag.name = "reptil";
+              } else if (tag.name.includes("elephantidae")) {
+                tag.name = "elefante";
+              } else if (tag.name.includes("pyrus")) {
+                tag.name = "pera";
+              } else if (tag.name.includes("malus domestica")) {
+                tag.name = "manzana";
+              } else if (tag.name.includes("solanum tuberosum")) {
+                tag.name = "papa";
+              } else if (tag.name.includes("lactuca sativa")) {
+                tag.name = "lechuga";
+              }
+            } else {
+              return false;
             }
           }
-          return true;
-        } else { //cierro if de !tg.name array
-          return false;
-        }
+        return true;
+      } else { //cierro if de !tg.name array
+        return false;
+      }
       }
     });
 
@@ -172,30 +273,10 @@ app.get('/getAllTags', function(req, res) {
 
 //------------ This part is in charge of selecting the photos according to the categories
 // TODO: finish the get tag for the categories: animales, personas, comida
-// function getTag(tagToSearch) {
-//   console.log("holi desde getTag con tag = " + tagToSearch);
-//   // categoryArray = [];
-//   // query for calling all images onspecific tag
-//   const query = refTags.ref.child(tagToSearch);
-//   query.once("value", function(data) {
-//     data.forEach(function(cadaImgSnapshot) {
-//       var snapTemp = cadaImgSnapshot.val();
-//       categoryArray.push(snapTemp);
-//     });
-//   }).then(function(data) {
-//     // console.log(categoryArray);
-//     return categoryArray;
-//   });
-//   // return categoryArray;
-// }
-
-//------------ Function used for retreiving all image links where the tags are animals -> link 1, 2 ... n
 app.get('/getAnimals', function(req, res) {
   // arreglo donde guardo los links temporalmente para enviarlos
   var animalsArray = [];
-  // var categoryArray = [];
   //TODO: Llenar animalsArray con los datos que retorna getTag con cada animal de un array, y despues enviarlo como respuesta
-  // getTag("animal de compañía");
   var query = refTags.ref.child("animal de compañía");
   query.once("value", function(data) {
     data.forEach(function(cadaImgSnapshot) {
@@ -204,25 +285,10 @@ app.get('/getAnimals', function(req, res) {
       animalsArray.push(snapTemp);
     });
   }).then(function(data) {
-    // for (var i = 0; i < categoryArray.length; i++) {
-    //   animalsArray.push(categoryArray[i]);
-    // }
-    // return animalsArray;
     res.json(animalsArray);
   });
-
-  //
-  //   console.log(categoryArray);
-  //   for (var i = 0; i < categoryArray.length; i++) {
-  //   console.log("categoryArray en la posicion #" + i + "tiene a " + categoryArray[i]);
-  //   animalsArray.push(categoryArray[i]);
-  //   }
-  //   res.json(animalsArray);
 });
-
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-
-// exports.app = functions.https.onRequest(app);
