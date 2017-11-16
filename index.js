@@ -11,6 +11,8 @@ var refTags = db.ref('/tags');
 const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'});
 var threshold = 0.90;
 const MAXPREDICTION = 3;
+var counter = 0;
+var animalsArray = [];
 app.set('port', (process.env.PORT || 5000));
 
 //Arrray of words im going to use to filter the tags given to me by the A.I
@@ -112,6 +114,8 @@ const ANIMALS_KNOWN = [
   "hamster",
   "reptil"
 ];
+
+var numTipoAnimal = ANIMALS_KNOWN.length;
 
 //Tags that tell it is a person
 const PERSONAS_KNOWN = [
@@ -261,31 +265,48 @@ app.get('/getAllTags', function(req, res) {
   });
 });
 
+function encontrarObjCategoria(res, query){
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      if (snapTemp != undefined) {
+        animalsArray.push(snapTemp);
+      }
+    });
+  }).then(function(data) {
+    // DO NOTHING
+    counter++;
+    if (counter == numTipoAnimal - 1) {
+      sendCategoria(res, animalsArray);
+    }
+  });
+}
+
 //------------ This part is in charge of selecting the photos according to the categories
 app.get('/getAnimals', function(req, res) {
-  var counter = 0;
-  var numTipoAnimal = ANIMALS_KNOWN.length;
-  var animalsArray = [];
+  counter = 0;
+  animalsArray = [];
   for (var i = 0; i < numTipoAnimal; i++) {
     var query = refTags.ref.child(ANIMALS_KNOWN[i]);
-    query.once("value", function(data) {
-      data.forEach(function(cadaImgSnapshot) {
-        var snapTemp = cadaImgSnapshot.val();
-        if (snapTemp != undefined) {
-          animalsArray.push(snapTemp);
-        }
-      });
+    encontrarObjCategoria(res, query);
+    // query.once("value", function(data) {
+      // data.forEach(function(cadaImgSnapshot) {
+      //   var snapTemp = cadaImgSnapshot.val();
+      //   if (snapTemp != undefined) {
+      //     animalsArray.push(snapTemp);
+      //   }
+      // });
       // counter++;
       // if (counter == numTipoAnimal - 1) {
       //   res.json(animalsArray)
       // }
-    }).then(function(data) {
-      // DO NOTHING
-      counter++;
-      if (counter == numTipoAnimal - 1) {
-        sendCategoria(res, animalsArray);
-      }
-    });
+    // }).then(function(data) {
+    //   // DO NOTHING
+    //   counter++;
+    //   if (counter == numTipoAnimal - 1) {
+    //     sendCategoria(res, animalsArray);
+    //   }
+    // });
   } //cierro for
 });
 
