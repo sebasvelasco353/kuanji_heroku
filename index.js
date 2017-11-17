@@ -206,38 +206,72 @@ app.get('/predict', function(req, res) {
     }
 
     // Temporal image with the tags according to its category
-    for (var b = 0; b < ANIMALS_KNOWN.length; b++) {
-      if ((filtered[0].name == ANIMALS_KNOWN[b]) || (filtered[1].name == ANIMALS_KNOWN[b]) || (filtered[2].name == ANIMALS_KNOWN[b])) {
-        //Si la imagen tiene un tag que sea el nombre de algun animal
-        if (counter < 1) {
-          var imgTemp = {
-            link: toPredict,
-            tag1: filtered[0].name,
-            tag2: filtered[1].name,
-            tag3: filtered[2].name,
-            tag4: "animal"
-          }
+    // for (var b = 0; b < ANIMALS_KNOWN.length; b++) {
+    //   if ((filtered[0].name == ANIMALS_KNOWN[b]) || (filtered[1].name == ANIMALS_KNOWN[b]) || (filtered[2].name == ANIMALS_KNOWN[b])) {
+    //     //Si la imagen tiene un tag que sea el nombre de algun animal
+    //     if (counter < 1) {
+    //       var imgTemp = {
+    //         link: toPredict,
+    //         tag1: filtered[0].name,
+    //         tag2: filtered[1].name,
+    //         tag3: filtered[2].name,
+    //         tag4: "animal"
+    //       }
+    //
+    //       var tempLink = {
+    //         link: toPredict,
+    //         tag1: filtered[0].name,
+    //         tag2: filtered[1].name,
+    //         tag3: filtered[2].name,
+    //         tag4: "animal"
+    //       }
+    //
+    //       //add the imgLink json to the links on db
+    //       refLinks.push(imgTemp);
+    //       //Add the link to the corresponding tag on db
+    //       refTags.child(filtered[0].name).push(tempLink);
+    //       refTags.child(filtered[1].name).push(tempLink);
+    //       refTags.child(filtered[2].name).push(tempLink);
+    //       refCategorias.child("animal").push(tempLink);
+    //       res.send("added " + imgTemp + "To db successfully");
+    //       counter++;
+    //     }
+    //   }
+    // }
 
-          var tempLink = {
-            link: toPredict,
-            tag1: filtered[0].name,
-            tag2: filtered[1].name,
-            tag3: filtered[2].name,
-            tag4: "animal"
-          }
-
-          //add the imgLink json to the links on db
-          refLinks.push(imgTemp);
-          //Add the link to the corresponding tag on db
-          refTags.child(filtered[0].name).push(tempLink);
-          refTags.child(filtered[1].name).push(tempLink);
-          refTags.child(filtered[2].name).push(tempLink);
-          refCategorias.child("animal").push(tempLink);
-          res.send("added " + imgTemp + "To db successfully");
-          counter++;
+    var encontro = false;
+    for (var i = 0; i < filtered.length && !encontro; i++) {
+      console.log("reviando animals");
+      if (ANIMALS_KNOWN.includes(filtered[i].name)) {
+        encontro = true;
+        console.log("encontro");
+        var imgTemp = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "animal"
         }
+
+        var tempLink = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "animal"
+        }
+        //add the imgLink json to the links on db
+        refLinks.push(imgTemp);
+        //Add the link to the corresponding tag on db
+        refTags.child(filtered[0].name).push(tempLink);
+        refTags.child(filtered[1].name).push(tempLink);
+        refTags.child(filtered[2].name).push(tempLink);
+        refCategorias.child("animal").push(tempLink);
+        res.send("added " + imgTemp + "To db successfully");
       }
     }
+    console.log("finaliza busqueda animales");
+    //TODO: repetir para todas las categorias con el mismo encontro
 
   }, function(err) {
     // there was an error
@@ -292,6 +326,36 @@ app.get('/getAnimals', function(req, res) {
     sendCategoria(res, animalsArray);
   });
 });
+
+// app.get('/getComida', function(req, res) {
+//   animalsArray = [];
+//   var query = refCategorias.ref.child("comida");
+//   query.once("value", function(data) {
+//     data.forEach(function(cadaImgSnapshot) {
+//       var snapTemp = cadaImgSnapshot.val();
+//       if (snapTemp != undefined) {
+//         animalsArray.push(snapTemp);
+//       }
+//     });
+//   }).then(function(data) {
+//     sendCategoria(res, animalsArray);
+//   });
+// });
+//
+// app.get('/getPersona', function(req, res) {
+//   animalsArray = [];
+//   var query = refCategorias.ref.child("animal");
+//   query.once("value", function(data) {
+//     data.forEach(function(cadaImgSnapshot) {
+//       var snapTemp = cadaImgSnapshot.val();
+//       if (snapTemp != undefined) {
+//         animalsArray.push(snapTemp);
+//       }
+//     });
+//   }).then(function(data) {
+//     sendCategoria(res, animalsArray);
+//   });
+// });
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
