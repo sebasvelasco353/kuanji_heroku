@@ -9,7 +9,9 @@ var db = admin.database();
 var refLinks = db.ref('/links');
 var refTags = db.ref('/tags');
 var refCategorias = db.ref('/categorias');
-const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'});
+const clarifaiApp = new Clarifai.App({
+  apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'
+});
 var threshold = 0.90;
 const MAXPREDICTION = 3;
 var counter = 0;
@@ -116,7 +118,6 @@ const ANIMALS_KNOWN = [
   "reptil"
 ];
 
-var numTipoAnimal = ANIMALS_KNOWN.length;
 
 //Tags that tell it is a person
 const PERSONAS_KNOWN = [
@@ -234,6 +235,58 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("animal").push(tempLink);
         res.send("added " + imgTemp + "To db successfully");
+      } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
+        encontro = true;
+        console.log("encontro");
+        var imgTemp = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "persona"
+        }
+
+        var tempLink = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "persona"
+        }
+        //add the imgLink json to the links on db
+        refLinks.push(imgTemp);
+        //Add the link to the corresponding tag on db
+        refTags.child(filtered[0].name).push(tempLink);
+        refTags.child(filtered[1].name).push(tempLink);
+        refTags.child(filtered[2].name).push(tempLink);
+        refCategorias.child("persona").push(tempLink);
+        res.send("added " + imgTemp + "To db successfully");
+      } else if (COMIDA_KNOWN.includes(filtered[i].name)) {
+        encontro = true;
+        console.log("encontro");
+        var imgTemp = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "comida"
+        }
+
+        var tempLink = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "comida"
+        }
+        //add the imgLink json to the links on db
+        refLinks.push(imgTemp);
+        //Add the link to the corresponding tag on db
+        refTags.child(filtered[0].name).push(tempLink);
+        refTags.child(filtered[1].name).push(tempLink);
+        refTags.child(filtered[2].name).push(tempLink);
+        refCategorias.child("comida").push(tempLink);
+        res.send("added " + imgTemp + "To db successfully");
       }
     }
     console.log("finaliza busqueda animales");
@@ -290,6 +343,36 @@ app.get('/getAnimals', function(req, res) {
     });
   }).then(function(data) {
     sendCategoria(res, animalsArray);
+  });
+});
+
+app.get('/getPersonas', function(req, res) {
+  personasArray = [];
+  var query = refCategorias.ref.child("persona");
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      if (snapTemp != undefined) {
+        personasArray.push(snapTemp);
+      }
+    });
+  }).then(function(data) {
+    sendCategoria(res, personasArray);
+  });
+});
+
+app.get('/getComidas', function(req, res) {
+  comidaArray = [];
+  var query = refCategorias.ref.child("comida");
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      if (snapTemp != undefined) {
+        comidaArray.push(snapTemp);
+      }
+    });
+  }).then(function(data) {
+    sendCategoria(res, comidaArray);
   });
 });
 
