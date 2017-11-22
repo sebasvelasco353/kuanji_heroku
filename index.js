@@ -240,7 +240,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("animal").push(tempLink);
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("added " + imgTemp + "as animal To db successfully");
 
       } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
         encontro = true;
@@ -267,7 +267,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("persona").push(tempLink);
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("added " + imgTemp + "as persona To db successfully");
 
       } else if (COMIDA_KNOWN.includes(filtered[i].name)) {
         encontro = true;
@@ -294,7 +294,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("comida").push(tempLink);
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("added " + imgTemp + "as comida To db successfully");
       }
     }
     console.log("finaliza busqueda animales");
