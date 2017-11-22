@@ -163,12 +163,14 @@ app.get('/predict', function(req, res) {
   clarifaiApp.models.predict(Clarifai.GENERAL_MODEL, toPredict).then(function(response) {
     // todos los tags
     var tags = response.rawData.outputs[0].data.concepts;
-    // filtro por el threshold
+    // filtro por el threshold de 90%
     var filtered = tags.filter(function(tag) {
       if (tag.value > threshold) {
+        // si el tag no es nulo ni undefined
         if ((tag.name != null) || (tag.name != undefined)) {
           for (var i = 0; i < WORDSTOFILTER_ARRAY.length; i++) { //for to loop over the array
-            if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes the
+            if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes one of the words i have to filter
+              // if the tag is this then change it to that
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
                 tag.name = "perro";
               } else if (tag.name.includes("animalia")) {
@@ -194,6 +196,7 @@ app.get('/predict', function(req, res) {
               return false;
             }
           }
+          // y despues de filtrar y cambiar las palabras necesarias devuelvo un true es decir que lo agrego al array filtered
           return true;
         } else { //cierro if de !tg.name array
           return false;
@@ -201,14 +204,17 @@ app.get('/predict', function(req, res) {
       }
     });
 
+    // inicio proceso de sacar solo una cantidad especifica de tags, en este caso 3
     var cantidadPorEliminar = filtered.length - MAXPREDICTION;
     if (cantidadPorEliminar > 0) {
       filtered.splice(3, cantidadPorEliminar);
     }
 
+    // categorizacion pelao
+    // esta variable es para saber si encontro algun tag que sea coincidencia de una categoria y asi no agregarlo varias veces
     var encontro = false;
     for (var i = 0; i < filtered.length && !encontro; i++) {
-      console.log("reviando animals");
+      console.log("analizando animals");
       if (ANIMALS_KNOWN.includes(filtered[i].name)) {
         encontro = true;
         console.log("encontro");
@@ -235,6 +241,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("animal").push(tempLink);
         res.send("added " + imgTemp + "To db successfully");
+
       } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
         encontro = true;
         console.log("encontro");
@@ -261,6 +268,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("persona").push(tempLink);
         res.send("added " + imgTemp + "To db successfully");
+
       } else if (COMIDA_KNOWN.includes(filtered[i].name)) {
         encontro = true;
         console.log("encontro");
