@@ -9,9 +9,7 @@ var db = admin.database();
 var refLinks = db.ref('/links');
 var refTags = db.ref('/tags');
 var refCategorias = db.ref('/categorias');
-const clarifaiApp = new Clarifai.App({
-  apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'
-});
+const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'});
 var threshold = 0.90;
 const MAXPREDICTION = 3;
 var counter = 0;
@@ -118,7 +116,6 @@ const ANIMALS_KNOWN = [
   "reptil"
 ];
 
-
 //Tags that tell it is a person
 const PERSONAS_KNOWN = [
   "hombre",
@@ -154,6 +151,7 @@ const COMIDA_KNOWN = [
 function sendCategoria(res, toSend) {
   res.json(toSend);
 }
+//TODO: descargar el CLI de heroku para ver los logs
 
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
@@ -163,14 +161,12 @@ app.get('/predict', function(req, res) {
   clarifaiApp.models.predict(Clarifai.GENERAL_MODEL, toPredict).then(function(response) {
     // todos los tags
     var tags = response.rawData.outputs[0].data.concepts;
-    // filtro por el threshold de 90%
+    // filtro por el threshold
     var filtered = tags.filter(function(tag) {
       if (tag.value > threshold) {
-        // si el tag no es nulo ni undefined
         if ((tag.name != null) || (tag.name != undefined)) {
           for (var i = 0; i < WORDSTOFILTER_ARRAY.length; i++) { //for to loop over the array
-            if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes one of the words i have to filter
-              // if the tag is this then change it to that
+            if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes the
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
                 tag.name = "perro";
               } else if (tag.name.includes("animalia")) {
@@ -196,7 +192,6 @@ app.get('/predict', function(req, res) {
               return false;
             }
           }
-          // y despues de filtrar y cambiar las palabras necesarias devuelvo un true es decir que lo agrego al array filtered
           return true;
         } else { //cierro if de !tg.name array
           return false;
@@ -204,17 +199,14 @@ app.get('/predict', function(req, res) {
       }
     });
 
-    // inicio proceso de sacar solo una cantidad especifica de tags, en este caso 3
     var cantidadPorEliminar = filtered.length - MAXPREDICTION;
     if (cantidadPorEliminar > 0) {
       filtered.splice(3, cantidadPorEliminar);
     }
 
-    // categorizacion pelao
-    // esta variable es para saber si encontro algun tag que sea coincidencia de una categoria y asi no agregarlo varias veces
     var encontro = false;
     for (var i = 0; i < filtered.length && !encontro; i++) {
-      console.log("analizando animals");
+      console.log("reviando animals");
       if (ANIMALS_KNOWN.includes(filtered[i].name)) {
         encontro = true;
         console.log("encontro");
@@ -240,8 +232,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("animal").push(tempLink);
-        res.send("added " + imgTemp + "as animal To db successfully");
-
+        res.send("added " + imgTemp + "To db successfully");
       } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
         encontro = true;
         console.log("encontro");
@@ -267,8 +258,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("persona").push(tempLink);
-        res.send("added " + imgTemp + "as persona To db successfully");
-
+        res.send("added " + imgTemp + "To db successfully");
       } else if (COMIDA_KNOWN.includes(filtered[i].name)) {
         encontro = true;
         console.log("encontro");
@@ -294,7 +284,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("comida").push(tempLink);
-        res.send("added " + imgTemp + "as comida To db successfully");
+        res.send("added " + imgTemp + "To db successfully");
       }
     }
     console.log("finaliza busqueda animales");
@@ -354,33 +344,33 @@ app.get('/getAnimals', function(req, res) {
   });
 });
 
-app.get('/getPersonas', function(req, res) {
-  personasArray = [];
-  var query = refCategorias.ref.child("persona");
-  query.once("value", function(data) {
-    data.forEach(function(cadaImgSnapshot) {
-      var snapTemp = cadaImgSnapshot.val();
-      if (snapTemp != undefined) {
-        personasArray.push(snapTemp);
-      }
-    });
-  }).then(function(data) {
-    sendCategoria(res, personasArray);
-  });
-});
-
 app.get('/getComidas', function(req, res) {
-  comidaArray = [];
+  animalsArray = [];
   var query = refCategorias.ref.child("comida");
   query.once("value", function(data) {
     data.forEach(function(cadaImgSnapshot) {
       var snapTemp = cadaImgSnapshot.val();
       if (snapTemp != undefined) {
-        comidaArray.push(snapTemp);
+        animalsArray.push(snapTemp);
       }
     });
   }).then(function(data) {
-    sendCategoria(res, comidaArray);
+    sendCategoria(res, animalsArray);
+  });
+});
+
+app.get('/getPersonas', function(req, res) {
+  animalsArray = [];
+  var query = refCategorias.ref.child("persona");
+  query.once("value", function(data) {
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      if (snapTemp != undefined) {
+        animalsArray.push(snapTemp);
+      }
+    });
+  }).then(function(data) {
+    sendCategoria(res, animalsArray);
   });
 });
 
