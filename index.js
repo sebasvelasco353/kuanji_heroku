@@ -290,8 +290,6 @@ app.get('/predict', function(req, res) {
       }
     }
     console.log("finaliza busqueda animales");
-    //TODO: repetir para todas las categorias con el mismo encontro
-
   }, function(err) {
     // there was an error
     res.send("Error");
@@ -362,6 +360,7 @@ app.get('/getComidas', function(req, res) {
 });
 
 app.get('/getPersonas', function(req, res) {
+  console.log("i can hear them calling");
   animalsArray = [];
   var query = refCategorias.ref.child("persona");
   query.once("value", function(data) {
