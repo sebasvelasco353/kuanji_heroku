@@ -9,7 +9,9 @@ var db = admin.database();
 var refLinks = db.ref('/links');
 var refTags = db.ref('/tags');
 var refCategorias = db.ref('/categorias');
-const clarifaiApp = new Clarifai.App({apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'});
+const clarifaiApp = new Clarifai.App({
+  apiKey: 'b71dea8696994f2f896b4cfa9f667b7d'
+});
 var threshold = 0.90;
 const MAXPREDICTION = 3;
 var counter = 0;
@@ -151,7 +153,7 @@ const COMIDA_KNOWN = [
 function sendCategoria(res, toSend) {
   res.json(toSend);
 }
-//TODO: descargar el CLI de heroku para ver los logs
+// TODO: descargar el CLI de heroku para ver los logs
 
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
