@@ -338,6 +338,7 @@ app.get('/getAllTags', function(req, res) {
 });
 
 app.get('/getAnimals', function(req, res) {
+  console.log('animalejos');
   animalsArray = [];
   var query = refCategorias.ref.child("animal");
   query.once("value", function(data) {
@@ -353,6 +354,7 @@ app.get('/getAnimals', function(req, res) {
 });
 
 app.get('/getComidas', function(req, res) {
+  console.log('comidas pops');
   animalsArray = [];
   var query = refCategorias.ref.child("comida");
   query.once("value", function(data) {
