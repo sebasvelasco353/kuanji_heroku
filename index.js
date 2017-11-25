@@ -161,6 +161,7 @@ app.get('/predict', function(req, res) {
   console.log('predict');
   counter = 0;
   var toPredict = req.query.link;
+  console.log(toPredict);
   clarifaiApp.models.predict(Clarifai.GENERAL_MODEL, toPredict).then(function(response) {
     // todos los tags
     console.log('me respondieron');
@@ -171,6 +172,7 @@ app.get('/predict', function(req, res) {
       if (tag.value > threshold) {
         if ((tag.name != null) || (tag.name != undefined)) {
           for (var i = 0; i < WORDSTOFILTER_ARRAY.length; i++) { //for to loop over the array
+            console.log(i);
             if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes the
               console.log('no esta en el array de cosas por filtrar');
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
