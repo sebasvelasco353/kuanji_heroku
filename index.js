@@ -156,17 +156,21 @@ function sendCategoria(res, toSend) {
 //Gets
 //------------ Function used for predicting the image sent by the front end to firebase
 app.get('/predict', function(req, res) {
+  console.log('predict');
   counter = 0;
   var toPredict = req.query.link;
   clarifaiApp.models.predict(Clarifai.GENERAL_MODEL, toPredict).then(function(response) {
     // todos los tags
+    console.log('me respondieron');
     var tags = response.rawData.outputs[0].data.concepts;
     // filtro por el threshold
     var filtered = tags.filter(function(tag) {
+      console.log('filtrando');
       if (tag.value > threshold) {
         if ((tag.name != null) || (tag.name != undefined)) {
           for (var i = 0; i < WORDSTOFILTER_ARRAY.length; i++) { //for to loop over the array
             if (!tag.name.includes(WORDSTOFILTER_ARRAY[i])) { //i check if the tagname includes the
+              console.log('no esta en el array de cosas por filtrar');
               if ((tag.name.includes("canis lupus familiaris")) || (tag.name.includes("canidae"))) {
                 tag.name = "perro";
               } else if (tag.name.includes("animalia")) {
@@ -201,6 +205,7 @@ app.get('/predict', function(req, res) {
 
     var cantidadPorEliminar = filtered.length - MAXPREDICTION;
     if (cantidadPorEliminar > 0) {
+      console.log('eliminando tags');
       filtered.splice(3, cantidadPorEliminar);
     }
 
@@ -234,6 +239,7 @@ app.get('/predict', function(req, res) {
         refCategorias.child("animal").push(tempLink);
         res.send("added " + imgTemp + "To db successfully");
       } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
+        console.log('looking for ppl');
         encontro = true;
         console.log("encontro");
         var imgTemp = {
@@ -260,6 +266,7 @@ app.get('/predict', function(req, res) {
         refCategorias.child("persona").push(tempLink);
         res.send("added " + imgTemp + "To db successfully");
       } else if (COMIDA_KNOWN.includes(filtered[i].name)) {
+        console.log('looking for food');
         encontro = true;
         console.log("encontro");
         var imgTemp = {
@@ -284,6 +291,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("comida").push(tempLink);
+        console.log('done');
         res.send("added " + imgTemp + "To db successfully");
       }
     }
