@@ -297,6 +297,33 @@ app.get('/predict', function(req, res) {
         refCategorias.child("comida").push(tempLink);
         console.log('done');
         res.send("added " + imgTemp + "To db successfully");
+      } else {
+        encontro = true;
+        console.log("encontro");
+        var imgTemp = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "otros"
+        }
+
+        var tempLink = {
+          link: toPredict,
+          tag1: filtered[0].name,
+          tag2: filtered[1].name,
+          tag3: filtered[2].name,
+          tag4: "otros"
+        }
+        //add the imgLink json to the links on db
+        refLinks.push(imgTemp);
+        //Add the link to the corresponding tag on db
+        refTags.child(filtered[0].name).push(tempLink);
+        refTags.child(filtered[1].name).push(tempLink);
+        refTags.child(filtered[2].name).push(tempLink);
+        refCategorias.child("otros").push(tempLink);
+        console.log('done');
+        res.send("added " + imgTemp + "To db successfully");
       }
     }
     console.log("finaliza busqueda animales");
@@ -325,7 +352,8 @@ app.get('/getAllLinks', function(req, res) {
 app.get('/getAllTags', function(req, res) {
   // arreglo donde guardo los links temporalmente para enviarlos
   var arreglo_tags = [];
-  refTags.once("value", function(data) {
+  var query = refCategorias.ref.child("otros");
+  query.once("value", function(data) {
     data.forEach(function(cadaTagSnapshot) {
       var tagPadre = cadaTagSnapshot.key;
       var snapTemp = {
