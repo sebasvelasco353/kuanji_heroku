@@ -268,7 +268,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("persona").push(tempLink);
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("persona");
       } else if (COMIDA_KNOWN.includes(filtered[i].name)) {
         console.log('looking for food');
         encontro = true;
@@ -296,7 +296,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("comida").push(tempLink);
         console.log('done');
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("comida");
       } else {
         encontro = true;
         console.log("encontro");
@@ -323,7 +323,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("otros").push(tempLink);
         console.log('done');
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("otros");
       }
     }
     console.log("finaliza busqueda animales");
