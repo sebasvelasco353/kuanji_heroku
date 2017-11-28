@@ -241,7 +241,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("animal").push(tempLink);
-        res.send("added " + imgTemp + "To db successfully");
+        res.send("animal");
       } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
         console.log('looking for ppl');
         encontro = true;
