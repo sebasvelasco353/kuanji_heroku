@@ -56,7 +56,7 @@ const WORDSTOFILTER_ARRAY = [
   "conejito",
   "adentro",
   "habitación",
-  "ninguna persona",
+  "Ninguna persona",
   "linda",
   "theraphosidae",
   "arácnido"
@@ -400,6 +400,7 @@ app.get('/getComidas', function(req, res) {
 });
 
 app.get('/getPersonas', function(req, res) {
+  // TODO: Recibe el ultimo id de la imagen y busca a partir de ese los sgtes 5
   console.log("i can hear them calling");
   animalsArray = [];
   var query = refCategorias.ref.child("persona");
