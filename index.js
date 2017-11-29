@@ -376,6 +376,7 @@ app.get('/getAnimals', function(req, res) {
       var snapTemp = cadaImgSnapshot.val();
       if (snapTemp != undefined) {
         animalsArray.push(snapTemp);
+        console.log("Added something");
       }
     });
   }).then(function(data) {
