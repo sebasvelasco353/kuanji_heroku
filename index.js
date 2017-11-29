@@ -134,26 +134,25 @@ const PERSONAS_KNOWN = [
 
 //Tags that tell it is food
 const COMIDA_KNOWN = [
-  "comida",
-  "postre",
-  "chocolate",
-  "pasta",
-  "verdura",
-  "asado",
-  "carne",
-  "fruto",
-  "mariscos",
-  "sopa",
-  "ensalada",
-  "bebida",
-  "gaseosa",
-  "sopa",
-  "delicioso",
-  "almuerzo",
-  "desayuno",
-  "cena",
-  "especialidad culinaria",
-  "arte culinario"
+  "Comida",
+  "Postre",
+  "Chocolate",
+  "Pasta",
+  "Verdura",
+  "Asado",
+  "Carne",
+  "Fruto",
+  "Mariscos",
+  "Sopa",
+  "Ensalada"
+  "Bebida",
+  "Gaseosa",
+  "Delicioso",
+  "Almuerzo",
+  "Desayuno",
+  "Cena",
+  "Especialidad culinaria",
+  "Arte culinario"
 ];
 
 function sendCategoria(res, toSend) {
