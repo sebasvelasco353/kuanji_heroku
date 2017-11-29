@@ -353,20 +353,17 @@ app.get('/getAllLinks', function(req, res) {
 
 //------------ Function used for retreiving all image links from All tags in the format tag -> link 1, 2 ... n
 app.get('/getAllTags', function(req, res) {
-  // arreglo donde guardo los links temporalmente para enviarlos
-  var arreglo_tags = [];
+  animalsArray = [];
   var query = refCategorias.ref.child("otros");
   query.once("value", function(data) {
-    data.forEach(function(cadaTagSnapshot) {
-      var tagPadre = cadaTagSnapshot.key;
-      var snapTemp = {
-        tag: tagPadre,
-        link: cadaTagSnapshot.val()
+    data.forEach(function(cadaImgSnapshot) {
+      var snapTemp = cadaImgSnapshot.val();
+      if (snapTemp != undefined) {
+        animalsArray.push(snapTemp);
       }
-      arreglo_tags.push(snapTemp);
     });
   }).then(function(data) {
-    res.json(arreglo_tags);
+    sendCategoria(res, animalsArray);
   });
 });
 
