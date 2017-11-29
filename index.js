@@ -64,6 +64,9 @@ const WORDSTOFILTER_ARRAY = [
 
 //Tags that tell it is an animal
 const ANIMALS_KNOWN = [
+  "insecto",
+  "roedor",
+  "mamifero",
   "mammalia",
   "animal",
   "abeja",
@@ -132,6 +135,8 @@ const PERSONAS_KNOWN = [
 //Tags that tell it is food
 const COMIDA_KNOWN = [
   "comida",
+  "postre",
+  "chocolate",
   "pasta",
   "verdura",
   "asado",
