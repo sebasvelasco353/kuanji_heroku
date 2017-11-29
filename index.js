@@ -135,6 +135,7 @@ const PERSONAS_KNOWN = [
 //Tags that tell it is food
 const COMIDA_KNOWN = [
   "Comida",
+  "comida",
   "Postre",
   "Chocolate",
   "Pasta",
