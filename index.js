@@ -64,6 +64,9 @@ const WORDSTOFILTER_ARRAY = [
 
 //Tags that tell it is an animal
 const ANIMALS_KNOWN = [
+  "insecto",
+  "roedor",
+  "mamifero",
   "mammalia",
   "animal",
   "abeja",
@@ -131,24 +134,26 @@ const PERSONAS_KNOWN = [
 
 //Tags that tell it is food
 const COMIDA_KNOWN = [
+  "Comida",
   "comida",
-  "pasta",
-  "verdura",
-  "asado",
-  "carne",
-  "fruto",
-  "mariscos",
-  "sopa",
-  "ensalada",
-  "bebida",
-  "gaseosa",
-  "sopa",
-  "delicioso",
-  "almuerzo",
-  "desayuno",
-  "cena",
-  "especialidad culinaria",
-  "arte culinario"
+  "Postre",
+  "Chocolate",
+  "Pasta",
+  "Verdura",
+  "Asado",
+  "Carne",
+  "Fruto",
+  "Mariscos",
+  "Sopa",
+  "Ensalada"
+  "Bebida",
+  "Gaseosa",
+  "Delicioso",
+  "Almuerzo",
+  "Desayuno",
+  "Cena",
+  "Especialidad culinaria",
+  "Arte culinario"
 ];
 
 function sendCategoria(res, toSend) {
