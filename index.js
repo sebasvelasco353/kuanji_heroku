@@ -145,7 +145,7 @@ const COMIDA_KNOWN = [
   "Fruto",
   "Mariscos",
   "Sopa",
-  "Ensalada"
+  "Ensalada",
   "Bebida",
   "Gaseosa",
   "Delicioso",
