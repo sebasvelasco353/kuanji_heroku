@@ -64,6 +64,7 @@ const WORDSTOFILTER_ARRAY = [
 
 //Tags that tell it is an animal
 const ANIMALS_KNOWN = [
+  "mammalia",
   "animal",
   "abeja",
   "aguila",
@@ -179,6 +180,8 @@ app.get('/predict', function(req, res) {
                 tag.name = "perro";
               } else if (tag.name.includes("animalia")) {
                 tag.name = "animal";
+              } else if (tag.name.includes("mammalia")) {
+                tag.name = "mamifero";
               } else if (tag.name.includes("Testudines")) {
                 tag.name = "tortuga";
               } else if (tag.name.includes("masculina")) {
