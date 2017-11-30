@@ -119,7 +119,9 @@ const ANIMALS_KNOWN = [
   "tortuga",
   "perro",
   "hamster",
-  "reptil"
+  "reptil",
+  "aves",
+  "vaca (bovino)"
 ];
 
 //Tags that tell it is a person
@@ -135,6 +137,7 @@ const PERSONAS_KNOWN = [
 //Tags that tell it is food
 const COMIDA_KNOWN = [
   "Comida",
+  "papas fritas",
   "comida",
   "Postre",
   "Chocolate",
@@ -203,6 +206,8 @@ app.get('/predict', function(req, res) {
                 tag.name = "papa";
               } else if (tag.name.includes("lactuca sativa")) {
                 tag.name = "lechuga";
+              } else if (tag.name.includes("la agricultura (empresa comercial)")) {
+                tag.name = "agricultura";
               }
             } else {
               return false;
@@ -249,6 +254,7 @@ app.get('/predict', function(req, res) {
         refTags.child(filtered[1].name).push(tempLink);
         refTags.child(filtered[2].name).push(tempLink);
         refCategorias.child("animal").push(tempLink);
+        console.log("animal added");
         res.send("animal");
       } else if (PERSONAS_KNOWN.includes(filtered[i].name)) {
         console.log('looking for ppl');
